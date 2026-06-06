@@ -1,0 +1,16 @@
+# Portable Julia environment
+julia/
+
+# Python cache and compiled files
+__pycache__/
+*.pyc
+src/**/__pycache__/
+
+# Output and results
+out/
+results/
+data/subsets/
+
+# IDE files
+.vscode/
+.idea/
