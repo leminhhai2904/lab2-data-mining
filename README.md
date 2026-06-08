@@ -1,42 +1,116 @@
-# Lab 2 - Data Mining: Thuật toán GenMax
+# Đồ Án 2: Khai thác Tập phổ biến (Thuật toán GenMax)
 
-Dự án triển khai thuật toán khai thác tập phổ biến tối đại (Maximal Frequent Itemsets - MFI) GenMax bằng hai ngôn ngữ: **Python** và **Julia**.
+Đây là kho lưu trữ mã nguồn cho Đồ án Khai thác Tập phổ biến. 
+Dự án không sử dụng bất kỳ thư viện Khai thác dữ liệu nào có sẵn làm công cụ xử lý lõi, tự xây dựng hệ thống đọc/ghi file chuẩn SPMF, tiến hành benchmark diện rộng và có triển khai bài toán **Phân tích giỏ hàng (Market Basket Analysis)**.
 
 ---
 
-## 1. Hướng dẫn chạy phiên bản Julia (Khuyên dùng)
+## 1. Cấu Trúc Dự Án
 
-Để chạy phiên bản Julia mới nhất, hãy hướng dẫn bạn của bạn thực hiện theo các bước sau:
-
-### Bước 1: Cập nhật mã nguồn mới nhất
-Chạy lệnh pull để cập nhật code và script cài đặt mới nhất:
-```bash
-git pull origin main
+```
+Group_ID/
+├── README.md
+├── src/                        # Mã nguồn chính thức (100% Julia)
+│   ├── main.jl                 # Entry point chính chạy thuật toán (parse CLI)
+│   ├── run_test.jl             # Tool kiểm thử nhanh với Toy Data (trong bài báo)
+│   ├── utils.jl                # Module IO xử lý file SPMF (.txt/.dat)
+│   ├── structures.jl           # Khai báo cấu trúc Vertical Database (BitSet)
+│   ├── algorithm/
+│   │   └── genmax.jl           # Thuật toán lõi bằng đệ quy nhánh cận + Diffset
+│   └── experiments/
+│       ├── run_experiments.jl  # Chạy test đo lường Thời Gian / RAM theo từng Minsup
+│       ├── compare_spmf.jl     # So sánh bộ output GenMax với bộ output của SPMF
+│       ├── make_plots.jl       # Auto-render biểu đồ
+│       ├── generate_subsets.jl # Tự động cắt các subset dữ liệu phục vụ test khả năng mở rộng
+│       └── market_basket.jl    # Ứng dụng Phân tích Giỏ hàng (Tính Lift, Confidence)
+├── tests/
+│   ├── test_correctness.jl     # Unit Test: Kiểm thử tính đúng đắn với dữ liệu đồ chơi
+│   └── test_benchmark.jl       # Unit Test: Tự động lặp và Check Error qua 5 CSDL chuẩn
+├── data/
+│   ├── benchmark/              # Dữ liệu phục vụ đánh giá (chess, mushroom, retail, T1014...)
+│   └── application/            # Dữ liệu bán lẻ cho Market Basket Analysis
+├── notebooks/
+│   └── demo.ipynb              # Jupyter notebook minh hoạ các phép chạy
+└── docs/
+    └── Report_Template.md      # Khung báo cáo nộp giáo viên
 ```
 
-### Bước 2: Thiết lập môi trường Julia
-*   **Trường hợp 1 (Máy đã cài sẵn Julia hệ thống):** Không cần cài đặt gì thêm, đi thẳng đến Bước 3.
-*   **Trường hợp 2 (Máy chưa cài Julia - Dành cho Windows):**
-    Chạy script tự động để tải và thiết lập môi trường Julia Portable (dạng nén cục bộ trong thư mục dự án):
-    ```powershell
-    powershell .\setup_julia.ps1
-    ```
+---
 
-### Bước 3: Chạy kiểm thử (Run Test)
-*   Nếu sử dụng **Julia hệ thống (Trường hợp 1)**:
-    ```bash
-    julia src/run_test.jl
-    ```
-*   Nếu sử dụng **Julia Portable cục bộ (Trường hợp 2)**:
-    ```powershell
-    .\julia\bin\julia.exe src/run_test.jl
-    ```
+## 2. Hướng Dẫn Cài Đặt
+
+Mã nguồn được viết hoàn toàn bằng Julia.
+
+**Bước 1:** Tải/Clone project về máy.
+
+**Bước 2:** Cài đặt các Package mở rộng hỗ trợ (Chủ yếu dành cho thực nghiệm, dựng biểu đồ và MBA). Mở Terminal và gõ:
+```bash
+julia -e 'using Pkg; Pkg.add(["CSV", "DataFrames", "Plots", "Combinatorics"])'
+```
+*Ghi chú: Nếu hệ thống bạn chưa có sẵn lệnh `julia`, bạn có thể chạy `powershell .\setup_julia.ps1` (trên Windows) để nó tự động thiết lập một phiên bản Julia nén tại chỗ.*
 
 ---
 
-## 2. Cấu trúc thư mục liên quan tới Julia
+## 3. Cách Chạy Cơ Bản & Tham Số Dòng Lệnh
 
-*   `src/structures.jl`: Cấu trúc dữ liệu dọc [VerticalDatabase](file:///c:/Users/Genmax/lab2-data-mining/src/structures.jl) tối ưu bằng `BitSet` của Julia.
-*   `src/algorithm/genmax.jl`: Thuật toán lõi [genmax](file:///c:/Users/Genmax/lab2-data-mining/src/algorithm/genmax.jl) đệ quy nhánh cận kết hợp cấu trúc Diffset.
-*   `src/run_test.jl`: Tập tin chạy kiểm thử [run_test.jl](file:///c:/Users/Genmax/lab2-data-mining/src/run_test.jl) với dữ liệu mẫu.
-*   `setup_julia.ps1`: Script PowerShell [setup_julia.ps1](file:///c:/Users/Genmax/lab2-data-mining/setup_julia.ps1) tự động tải và giải nén môi trường.
+Bạn có thể chạy thử trực tiếp trên Terminal/CMD với cấu trúc lệnh:
+```bash
+julia src/main.jl <đường_dẫn_file_dữ_liệu> <minsup>
+```
+
+**Ví dụ với minsup Tương đối (Dưới dạng Decimal):**
+Sẽ tìm tất cả các mục có độ phổ biến từ 80% trở lên.
+```bash
+julia src/main.jl data/benchmark/chess.dat 0.8
+```
+
+**Ví dụ với minsup Tuyệt đối (Dưới dạng Số nguyên):**
+Tìm tất cả item có lượt giao dịch tối thiểu là 500.
+```bash
+julia src/main.jl data/benchmark/mushroom.dat 500
+```
+> Kết quả MFI sẽ được tự động trích xuất và in vào chung thư mục chứa file data với đuôi `_MFI_output.txt`.
+
+---
+
+## 4. Kiểm Thử Tự Động (Unit Testing)
+
+Chạy bộ Test cơ bản theo ví dụ minh hoạ từ bài báo GenMax:
+```bash
+julia tests/test_correctness.jl
+# (Hoặc gõ nhanh: julia src/run_test.jl)
+```
+
+Kiểm tra độ bao phủ (Crash & Pass) khi chạy toàn bộ 5 CSDL theo yêu cầu của đồ án:
+```bash
+julia tests/test_benchmark.jl
+```
+
+---
+
+## 5. Đánh Giá Hiệu Năng và Biểu Đồ
+
+Để phát sinh các file CSV đo lường tốc độ, mức thu hồi bộ nhớ đỉnh (Peak RAM) ứng với nhiều minsup:
+```bash
+julia src/experiments/run_experiments.jl
+```
+
+Chạy rendering vẽ biểu đồ (Thời gian thi hành & Số MFI) từ logs:
+```bash
+julia src/experiments/make_plots.jl
+```
+
+So sánh chéo độ chính xác của Module Julia Genmax với Module SPMF (Java):
+```bash
+julia src/experiments/compare_spmf.jl PATH_CUSTOM PATH_SPMF
+```
+
+---
+
+## 6. Chạy Ứng Dụng: Market Basket Analysis
+
+Để chứng minh tính ứng dụng của MFI, nhóm triển khai script phân tích giỏ mua hàng để sinh bảng luật kết hợp.
+```bash
+julia src/experiments/market_basket.jl
+```
+Hệ thống sẽ lấy file `data/application/retail.dat` xử lý thông qua `GenMax` và sinh mọi `subset`, tính sự tự tin `Confidence`, hệ số tương quan `Lift` và xuất ra **TOP-10 luật** hữu ích nhất cho người ra quyết định.

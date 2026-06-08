@@ -1,0 +1,67 @@
+
+ĐỒ ÁN 2: KHAI THÁC TẬP PHỔ BIẾN
+Frequent Itemset Mining - Nghiên cứu, Cài đặt & Đánh giá
+
+1. MỤC TIÊU ĐỒ ÁN
+Khai thác tập phổ biến (Frequent Itemset Mining – FIM) là nền tảng của nhiều bài toán khai phá dữ liệu quan trọng, từ luật kết hợp (association rules), phân tích giỏ hàng (market basket analysis) cho đến phát hiện mẫu trong dữ liệu sinh học và web. Đồ án này yêu cầu sinh viên đi sâu vào một thuật toán FIM cụ thể – không chỉ dừng lại ở việc sử dụng thư viện có sẵn mà phải tự cài đặt lại từ đầu, chứng minh hiểu biết nền tảng và khả năng tối ưu hóa thực tế. 
+
+Sau khi hoàn thành, sinh viên đạt được:
+- Hiểu sâu cơ sở lý thuyết, cấu trúc dữ liệu và độ phức tạp của thuật toán được chọn.
+- Khả năng cài đặt lại một thuật toán khai phá dữ liệu bằng Julia (ưu tiên) hoặc Python từ mô tả gốc trong bài báo khoa học.
+- Kỹ năng thiết kế thực nghiệm, đo lường hiệu năng và so sánh với cài đặt tham chiếu (SPMF).
+- Kỹ năng viết báo cáo kỹ thuật theo chuẩn học thuật.
+
+Sử dụng Julia: Đồ án ưu tiên sử dụng ngôn ngữ Julia để cài đặt. Nhóm sử dụng Julia sẽ được cộng +5 điểm thưởng vào tổng điểm đồ án. Python được chấp nhận nhưng không nhận điểm thưởng này.
+
+--------------------------------------------------
+
+2. LỰA CHỌN THUẬT TOÁN
+Thuật roán được chọn là GenMax
+
+3. Chương 3: Cài đặt
+- 3.3.1. Môi trường và công cụ: Ngôn ngữ ưu tiên là Julia (phiên bản 1.9). Nếu dùng Python, yêu cầu Python > 3.9 và chỉ được sử dụng numpy, pandas, bitarray (không dùng thư viện FIM).
+- 3.3.2. Yêu cầu cài đặt [Bắt buộc]:
+  + Cài đặt cơ bản: Cài đặt đúng thuật toán. Kết quả phải khớp hoàn toàn với SPMF.
+  + Tái tạo đúng kết quả: Unit test tự động trên ít nhất 5 CSDL khác nhau. 
+  + Tối ưu hóa: Áp dụng ít nhất một kỹ thuật tối ưu.
+  + Xử lý I/O: Hỗ trợ đọc/xuất file định dạng SPMF (.txt).
+
+3.4. Chương 4: Thực nghiệm và đánh giá
+- 3.4.1. Tập dữ liệu benchmark: Thực nghiệm trên ít nhất 4 tập dữ liệu: Chess, Mushroom, Retail, Accidents, T1014D100K.
+- 3.4.2. Thực nghiệm bắt buộc (trình bày bằng biểu đồ): Correctness, thời gian chạy theo minsup, số lượng frequent itemset sinh ra theo minsup, mức sử dụng RAM tối đa, khả năng mở rộng (Scalability), ảnh hưởng của độ dài giao dịch trung bình.
+- 3.4.3. Phân tích kết quả: Giải thích kết quả dựa trên lý thuyết, xác định điểm mạnh/yếu, đề xuất ít nhất 2 hướng tối ưu hóa tiếp theo.
+
+
+4. YÊU CẦU KỸ THUẬT
+
+4.1. Về mã nguồn
+- Ngôn ngữ Julia >= 1.9 hoặc Python >= 3.9 (Không dùng thư viện FIM).
+- Mọi kết quả phải tái sản xuất được (cố định seed).
+- Kiểm thử tự động đầy đủ (pass toàn bộ test).
+- Hiệu năng: Tránh các anti-patterns.
+- Tài liệu README rõ ràng hướng dẫn cài đặt và sử dụng.
+
+
+
+5. TỔ CHỨC ĐỒ ÁN VÀ NỘP BÀI
+Nộp file nén Group_ID.zip. File Notebook phải được Restart & Run All. Kiểm thử phải đính kèm output vào README.
+
+Cấu trúc thư mục gợi ý:
+Group_ID/
+|-- README.md
+|-- Project.toml hoặc requirements.txt
+|-- src/
+    |-- algorithm/
+    |-- structures.jl
+    |-- utils.jl
+|-- tests/
+    |-- test_correctness.jl
+    |-- test_benchmark.jl
+|-- data/
+    |-- toy/
+    |-- benchmark/
+|-- notebooks/
+    |-- demo.ipynb
+|-- docs/
+    |-- Report.pdf
+
