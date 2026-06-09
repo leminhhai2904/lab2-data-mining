@@ -1,9 +1,11 @@
 using Combinatorics
 using Printf
 
+include(joinpath(@__DIR__, "..", "structures.jl"))
 include(joinpath(@__DIR__, "..", "utils.jl"))
 include(joinpath(@__DIR__, "..", "algorithm", "genmax.jl"))
 
+using .Structures
 using .Utils
 using .GenMaxAlgo
 
