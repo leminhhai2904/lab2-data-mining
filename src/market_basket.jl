@@ -1,9 +1,9 @@
 using Combinatorics
 using Printf
 
-include(joinpath(@__DIR__, "..", "structures.jl"))
-include(joinpath(@__DIR__, "..", "utils.jl"))
-include(joinpath(@__DIR__, "..", "algorithm", "genmax.jl"))
+include(joinpath(@__DIR__, "structures.jl"))
+include(joinpath(@__DIR__, "utils.jl"))
+include(joinpath(@__DIR__, "algorithm", "genmax.jl"))
 
 using .Structures
 using .Utils
@@ -139,7 +139,7 @@ function market_basket_analysis(filepath::String, minsup_ratio::Float64, minconf
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__
-    dataset_path = joinpath(@__DIR__, "..", "..", "data", "application", "retail.dat")
+    dataset_path = joinpath(@__DIR__, "..", "data", "application", "retail.dat")
     
     if isfile(dataset_path)
         # Chạy mẫu trên dataset retail 

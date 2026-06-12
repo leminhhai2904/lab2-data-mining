@@ -5,112 +5,86 @@ Dự án không sử dụng bất kỳ thư viện Khai thác dữ liệu nào c
 
 ---
 
-## 1. Cấu Trúc Dự Án
+## 1. Hướng Dẫn Cài Đặt Môi Trường
 
+Dự án được xây dựng toàn vẹn trên ngôn ngữ **Julia** và đã được bao gói tự động để cấu hình cực kỳ dễ dàng trên máy tính cá nhân (đặc biệt là Windows) mà không sợ lỗi xung đột.
+
+### Cài đặt tự động trong 1 click
+Bạn không cần tự cài đặt phần mềm hay cấu hình biến môi trường rườm rà.
+1. Mở Terminal (PowerShell) tại thư mục gốc của dự án.
+2. Quá trình thiết lập Kernel Jupyter và các Package thuộc dự án đã được chuẩn hoá với tệp `Project.toml`. Chạy lệnh sau để tải một bản Julia Portable thu gọn và tự cài đặt thư viện:
+   ```powershell
+   .\setup_julia.ps1
+   ```
+3. Sau khi Terminal hiển thị dòng báo `[THÀNH CÔNG]`, quá trình cài đặt hoàn tất. Lúc này trong thư mục sẽ xuất hiện thêm folder `julia/` phục vụ cho việc thực thi code.
+
+---
+
+## 2. Cách Chạy và Trải Nghiệm (Khuyến nghị)
+
+Cách tốt nhất để giảng viên hoặc người dùng trải nghiệm đánh giá dự án là sử dụng **Jupyter Notebook** (nơi nhóm đã viết sẵn cả minh hoạ, code ứng dụng và ghi chú).
+
+1. Bật **VS Code** (hoặc JupyterLab).
+2. Mở file `notebooks/demo.ipynb`.
+3. Nhìn lên góc trên bên phải, bấm vào mục **Select Kernel** -> Chọn **Jupyter Kernel** -> Nhấn nút mũi tên xoay vòng (Refresh) ở góc nhỏ nếu chưa tải kịp -> Chọn mục **Julia 1.10.x** (được cài đặt từ bước 1).
+4. Run từng ô (Run Cell) từ trên xuống dưới. Notebook sẽ chạy các quy trình sau:
+   - Sinh file Toy Data để minh hoạ thuật toán cơ sở.
+   - Nạp file Benchmark (cỡ lớn) để đo thời gian qua biến `@time`.
+   - Sinh và in ra *Top 10 Luật kết hợp (Association Rules)* dựa theo độ tương quan `Lift` lớn nhất.
+
+---
+
+## 3. Cách Chạy Cốt Lõi Qua Dòng Lệnh (CLI)
+
+Nếu bạn muốn test thuật toán xử lý dữ liệu hàng triệu dòng mà không cần mở Notebook, bạn có thể dùng Terminal gọi thẳng vào lõi mã nguồn:
+
+Cấu trúc lệnh chuẩn:
+```powershell
+.\julia\bin\julia.exe src/main.jl <đường_dẫn_file_dữ_liệu> <minsup>
 ```
+
+**Ví dụ 1: Truyền thông số file và Minsup Tỉ lệ phần trăm (%)**
+Lệnh này sẽ tìm tất cả các mục có độ phổ biến từ 80% trở lên.
+```powershell
+.\julia\bin\julia.exe src/main.jl data/benchmark/chess.dat 0.8
+```
+
+**Ví dụ 2: Truyền thông số file và Minsup Tuyệt đối**
+Tìm tất cả các sự kiện giao dịch có lượt xuất hiện tối thiểu ấn định là 500.
+```powershell
+.\julia\bin\julia.exe src/main.jl data/benchmark/mushroom.dat 500
+```
+> *(Ghi chú: Kết quả xuất ra sẽ tự động được ghi sang định dạng SPMF cực chuẩn và lưu chung vào thư mục chứa file log ban đầu với đuôi `_MFI_output.txt`)*
+
+## 4. Chạy Ứng Dụng: Market Basket Analysis
+
+Để chứng minh tính ứng dụng của MFI, nhóm triển khai kịch bản phân tích giỏ mua hàng để tính toán và sinh bảng luật kết hợp trực tiếp từ tập dữ liệu bán lẻ `retail.dat`.
+```powershell
+.\julia\bin\julia.exe src/market_basket.jl
+```
+Hệ thống sẽ dựa vào tập Maximal Frequent Itemsets tìm được, sinh ra các mảng *Frequent Itemsets* tổ hợp con, sau đó tự tính độ hỗ trợ (Support), sự tự tin (Confidence) và lấy top các luật có hệ số tương quan (Lift) tốt nhất để xuất ra màn hình.
+
+---
+
+## 5. Cấu Trúc Dự Án
+
+```text
 Group_ID/
 ├── README.md
-├── src/                        # Mã nguồn chính thức (100% Julia)
-│   ├── main.jl                 # Entry point chính chạy thuật toán (parse CLI)
-│   ├── run_test.jl             # Tool kiểm thử nhanh với Toy Data (trong bài báo)
-│   ├── utils.jl                # Module IO xử lý file SPMF (.txt/.dat)
-│   ├── structures.jl           # Khai báo cấu trúc Vertical Database (BitSet)
-│   ├── algorithm/
-│   │   └── genmax.jl           # Thuật toán lõi bằng đệ quy nhánh cận + Diffset
-│   └── experiments/
-│       ├── run_experiments.jl  # Chạy test đo lường Thời Gian / RAM theo từng Minsup
-│       ├── compare_spmf.jl     # So sánh bộ output GenMax với bộ output của SPMF
-│       ├── make_plots.jl       # Auto-render biểu đồ
-│       ├── generate_subsets.jl # Tự động cắt các subset dữ liệu phục vụ test khả năng mở rộng
-│       └── market_basket.jl    # Ứng dụng Phân tích Giỏ hàng (Tính Lift, Confidence)
-├── tests/
-│   ├── test_correctness.jl     # Unit Test: Kiểm thử tính đúng đắn với dữ liệu đồ chơi
-│   └── test_benchmark.jl       # Unit Test: Tự động lặp và Check Error qua 5 CSDL chuẩn
+├── Project.toml                # Cấu hình dependency môi trường (Thay thế toàn bộ Requirements bằng file TOML chuẩn Julia)
+├── setup_julia.ps1             # Script tự động tải lõi ngôn ngữ Portable và instantiate(cài) Package.
+├── src/                        # Mã nguồn chính thức cốt lõi (100% Julia)
+│   ├── main.jl                 # Entry point chính cho Terminal
+│   ├── market_basket.jl        # Trình diễn Market Basket Analysis (sinh Luật kết hợp)
+│   ├── utils.jl                # Chức năng hỗ trợ Đọc/Ghi I/O với file chuẩn SPMF
+│   ├── structures.jl           # Định nghĩa Base Dataset dạng dọc (Vertical Data + BitSet) lớn để tối ưu Ram
+│   ├── algorithm/              # Thư mục Thuật toán
+│   │   └── genmax.jl           # Triển khai FI-diffset-combine, LMFI-backtrack của GenMax
+│   └── experiments/            # Các file Batch, Render plot dùng cho báo cáo PDF
+├── tests/                      # Chứa các file unit tests cơ bản
 ├── data/
-│   ├── benchmark/              # Dữ liệu phục vụ đánh giá (chess, mushroom, retail, T1014...)
-│   └── application/            # Dữ liệu bán lẻ cho Market Basket Analysis
-├── notebooks/
-│   └── demo.ipynb              # Jupyter notebook minh hoạ các phép chạy
-└── docs/
-    └── Report_Template.md      # Khung báo cáo nộp giáo viên
+│   ├── benchmark/              # Dữ liệu tiêu chuẩn chuẩn gốc thử nghiệm Benchmark (chess, mushroom...)
+│   └── toy/                    # File sinh giả lập (do sinh từ Code Demo)
+└── notebooks/
+    └── demo.ipynb              # File Demo Jupyter trình bày quá trình chạy kết hợp sinh luật MBA
 ```
-
----
-
-## 2. Hướng Dẫn Cài Đặt
-
-Mã nguồn được viết hoàn toàn bằng Julia.
-
-**Bước 1:** Tải/Clone project về máy.
-
-**Bước 2:** Cài đặt các Package mở rộng hỗ trợ (Chủ yếu dành cho thực nghiệm, dựng biểu đồ và MBA). Mở Terminal và gõ:
-```bash
-julia -e 'using Pkg; Pkg.add(["CSV", "DataFrames", "Plots", "Combinatorics"])'
-```
-*Ghi chú: Nếu hệ thống bạn chưa có sẵn lệnh `julia`, bạn có thể chạy `powershell .\setup_julia.ps1` (trên Windows) để nó tự động thiết lập một phiên bản Julia nén tại chỗ.*
-
----
-
-## 3. Cách Chạy Cơ Bản & Tham Số Dòng Lệnh
-
-Bạn có thể chạy thử trực tiếp trên Terminal/CMD với cấu trúc lệnh:
-```bash
-julia src/main.jl <đường_dẫn_file_dữ_liệu> <minsup>
-```
-
-**Ví dụ với minsup Tương đối (Dưới dạng Decimal):**
-Sẽ tìm tất cả các mục có độ phổ biến từ 80% trở lên.
-```bash
-julia src/main.jl data/benchmark/chess.dat 0.8
-```
-
-**Ví dụ với minsup Tuyệt đối (Dưới dạng Số nguyên):**
-Tìm tất cả item có lượt giao dịch tối thiểu là 500.
-```bash
-julia src/main.jl data/benchmark/mushroom.dat 500
-```
-> Kết quả MFI sẽ được tự động trích xuất và in vào chung thư mục chứa file data với đuôi `_MFI_output.txt`.
-
----
-
-## 4. Kiểm Thử Tự Động (Unit Testing)
-
-Chạy bộ Test cơ bản theo ví dụ minh hoạ từ bài báo GenMax:
-```bash
-julia tests/test_correctness.jl
-# (Hoặc gõ nhanh: julia src/run_test.jl)
-```
-
-Kiểm tra độ bao phủ (Crash & Pass) khi chạy toàn bộ 5 CSDL theo yêu cầu của đồ án:
-```bash
-julia tests/test_benchmark.jl
-```
-
----
-
-## 5. Đánh Giá Hiệu Năng và Biểu Đồ
-
-Để phát sinh các file CSV đo lường tốc độ, mức thu hồi bộ nhớ đỉnh (Peak RAM) ứng với nhiều minsup:
-```bash
-julia src/experiments/run_experiments.jl
-```
-
-Chạy rendering vẽ biểu đồ (Thời gian thi hành & Số MFI) từ logs:
-```bash
-julia src/experiments/make_plots.jl
-```
-
-So sánh chéo độ chính xác của Module Julia Genmax với Module SPMF (Java):
-```bash
-julia src/experiments/compare_spmf.jl PATH_CUSTOM PATH_SPMF
-```
-
----
-
-## 6. Chạy Ứng Dụng: Market Basket Analysis
-
-Để chứng minh tính ứng dụng của MFI, nhóm triển khai script phân tích giỏ mua hàng để sinh bảng luật kết hợp.
-```bash
-julia src/experiments/market_basket.jl
-```
-Hệ thống sẽ lấy file `data/application/retail.dat` xử lý thông qua `GenMax` và sinh mọi `subset`, tính sự tự tin `Confidence`, hệ số tương quan `Lift` và xuất ra **TOP-10 luật** hữu ích nhất cho người ra quyết định.
