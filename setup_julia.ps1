@@ -5,8 +5,11 @@ $ProgressPreference = 'SilentlyContinue'
 $JuliaDir = Join-Path $PSScriptRoot "julia"
 
 if (Test-Path $JuliaDir) {
-    Write-Host "[THÔNG BÁO] Thư mục 'julia' đã tồn tại. Bỏ qua bước cài đặt." -ForegroundColor Yellow
-    Write-Host "Bạn có thể chạy thử nghiệm ngay bằng lệnh:"
+    Write-Host "[THÔNG BÁO] Thư mục 'julia' đã tồn tại. Bỏ qua bước tải xuống." -ForegroundColor Yellow
+    Write-Host "[ĐANG XỬ LÝ] Kiểm tra và cập nhật các thư viện từ Project.toml..." -ForegroundColor Cyan
+    & .\julia\bin\julia.exe -e 'using Pkg; Pkg.activate("."); Pkg.instantiate()'
+    
+    Write-Host "`n[THÀNH CÔNG] Môi trường đã sẵn sàng! Mở Demo.ipynb hoặc chạy test bằng lệnh:" -ForegroundColor Green
     Write-Host "  .\julia\bin\julia.exe src/run_test.jl" -ForegroundColor Cyan
     exit 0
 }
@@ -32,10 +35,13 @@ try {
     Remove-Item -Path $ExtractDir -Recurse -Force
     Remove-Item -Path $ZipFile -Force
     
-    Write-Host "`n[THÀNH CÔNG] Cài đặt thành công môi trường Julia cục bộ!" -ForegroundColor Green
-    Write-Host "Bạn có thể chạy thử nghiệm bằng lệnh:" -ForegroundColor Green
+    Write-Host "`n[ĐANG XỬ LÝ] Khởi tạo môi trường dự án và cài đặt thư viện từ Project.toml..." -ForegroundColor Yellow
+    & .\julia\bin\julia.exe -e 'using Pkg; Pkg.activate("."); Pkg.instantiate()'
+
+    Write-Host "`n[THÀNH CÔNG] Cài đặt thành công môi trường Julia cục bộ và các thư viện!" -ForegroundColor Green
+    Write-Host "Bạn có thể mở chạy demo.ipynb trong Jupyter hoặc chạy test trực tiếp bằng lệnh:" -ForegroundColor Green
     Write-Host "  .\julia\bin\julia.exe src/run_test.jl" -ForegroundColor Cyan
 } catch {
-    Write-Error "Có lỗi xảy ra khi giải nén hoặc di chuyển thư mục."
+    Write-Error "Có lỗi xảy ra khi giải nén, di chuyển thư mục hoặc cài đặt gói."
     exit 1
 }
