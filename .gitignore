@@ -14,3 +14,8 @@ data/subsets/
 # IDE files
 .vscode/
 .idea/
+
+# Generated logs and outputs
+*_MFI_output.txt
+*out*.txt
+.ipynb_checkpoints/

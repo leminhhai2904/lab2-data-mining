@@ -12,28 +12,34 @@ using .Structures
 using .GenMaxAlgo
 using .Utils
 
-# --- Parse tham số dòng lệnh ---
-filepath, minsup = parse_command_line(ARGS)
+function main()
+    # --- Parse tham số dòng lệnh ---
+    filepath, minsup = parse_command_line(ARGS)
 
-if !isfile(filepath)
-    println("Lỗi: Không tìm thấy file \"$filepath\"")
-    exit(1)
+    if !isfile(filepath)
+        println("Lỗi: Không tìm thấy file \"$filepath\"")
+        exit(1)
+    end
+
+    # --- Đọc dữ liệu ---
+    println("Đang đọc dữ liệu từ: $filepath")
+    data = read_spmf_file(filepath)
+    println("Số giao dịch: $(length(data))")
+
+    # --- Chạy thuật toán ---
+    minsup_label = minsup isa AbstractFloat ? "$(minsup * 100)%" : "$minsup"
+    println("Đang chạy GenMax với minsup = $minsup_label ...")
+    t_start = time()
+    results = genmax(data, minsup)
+    elapsed = round(time() - t_start, digits=3)
+    println("Hoàn thành trong $elapsed giây. Tìm được $(length(results)) MFI.")
+
+    # --- Ghi kết quả ra file ---
+    out_path = filepath * "_MFI_output.txt"
+    write_spmf_file(results, out_path)
+    println("Kết quả đã được ghi vào: $out_path")
 end
 
-# --- Đọc dữ liệu ---
-println("Đang đọc dữ liệu từ: $filepath")
-data = read_spmf_file(filepath)
-println("Số giao dịch: $(length(data))")
-
-# --- Chạy thuật toán ---
-minsup_label = minsup isa AbstractFloat ? "$(minsup * 100)%" : "$minsup"
-println("Đang chạy GenMax với minsup = $minsup_label ...")
-t_start = time()
-results = genmax(data, minsup)
-elapsed = round(time() - t_start, digits=3)
-println("Hoàn thành trong $elapsed giây. Tìm được $(length(results)) MFI.")
-
-# --- Ghi kết quả ra file ---
-out_path = filepath * "_MFI_output.txt"
-write_spmf_file(results, out_path)
-println("Kết quả đã được ghi vào: $out_path")
+if abspath(PROGRAM_FILE) == @__FILE__
+    main()
+end

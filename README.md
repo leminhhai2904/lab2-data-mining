@@ -70,21 +70,28 @@ Hệ thống sẽ dựa vào tập Maximal Frequent Itemsets tìm được, sinh
 
 ```text
 Group_ID/
-├── README.md
-├── Project.toml                # Cấu hình dependency môi trường (Thay thế toàn bộ Requirements bằng file TOML chuẩn Julia)
-├── setup_julia.ps1             # Script tự động tải lõi ngôn ngữ Portable và instantiate(cài) Package.
+├── README.md                   # File hướng dẫn tổng quan dự án
+├── Project.toml                # Cấu hình dependency môi trường (chuẩn Julia)
+├── setup_julia.ps1             # Script tự động tải lõi ngôn ngữ Portable và kích hoạt Package
+├── Lab_information             # File mô tả yêu cầu đồ án
 ├── src/                        # Mã nguồn chính thức cốt lõi (100% Julia)
-│   ├── main.jl                 # Entry point chính cho Terminal
-│   ├── market_basket.jl        # Trình diễn Market Basket Analysis (sinh Luật kết hợp)
-│   ├── utils.jl                # Chức năng hỗ trợ Đọc/Ghi I/O với file chuẩn SPMF
-│   ├── structures.jl           # Định nghĩa Base Dataset dạng dọc (Vertical Data + BitSet) lớn để tối ưu Ram
-│   ├── algorithm/              # Thư mục Thuật toán
-│   │   └── genmax.jl           # Triển khai FI-diffset-combine, LMFI-backtrack của GenMax
-│   └── experiments/            # Các file Batch, Render plot dùng cho báo cáo PDF
-├── tests/                      # Chứa các file unit tests cơ bản
-├── data/
-│   ├── benchmark/              # Dữ liệu tiêu chuẩn chuẩn gốc thử nghiệm Benchmark (chess, mushroom...)
-│   └── toy/                    # File sinh giả lập (do sinh từ Code Demo)
+│   ├── main.jl                 # Entry point chính cho luồng chạy Terminal
+│   ├── market_basket.jl        # Script trình diễn Ứng dụng Market Basket Analysis
+│   ├── utils.jl                # Chức năng hỗ trợ Đọc/Ghi I/O định dạng SPMF chuẩn
+│   ├── structures.jl           # Định nghĩa cấu trúc Dataset lưu dọc (Vertical Data + BitSet) 
+│   ├── algorithm/              # Thư mục mã nguồn cho lõi thuật toán
+│   │   └── genmax.jl           # Triển khai thuật toán GenMax (FI-diffset, backtrack)
+│   └── experiments/            # Chứa test batch và plot vẽ biểu đồ cho báo cáo
+├── test/                       # Chứa các kịch bản kiểm thử tự động
+│   ├── runtests.jl             # Script điều phối luồng kiểm thử chính (chuẩn Julia)
+│   ├── test_benchmark.jl       # Script đo lường đánh giá hiệu năng thuật toán
+│   └── test_correctness.jl     # Script kiểm tra tính đúng đắn so với output chuẩn
+├── data/                       # Thư mục lưu trữ datasets
+│   ├── application/            # Dữ liệu ứng dụng thực tế (chứa file retail.dat)
+│   ├── benchmark/              # Dữ liệu lớn kiểm định Benchmark (chess.dat, mushroom.dat...)
+│   └── toy/                    # File dữ liệu nhỏ giả lập thuật toán cơ bản
+├── docs/                       # Thư mục chứa tài liệu báo cáo kỹ thuật
+│   └── Report_Template.md      # Template / Nội dung báo cáo 
 └── notebooks/
-    └── demo.ipynb              # File Demo Jupyter trình bày quá trình chạy kết hợp sinh luật MBA
+    └── demo.ipynb              # File Demo bằng Jupyter notebook trình diễn trực quan
 ```
