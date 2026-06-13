@@ -91,7 +91,27 @@ Group_ID/
 │   ├── benchmark/              # Dữ liệu lớn kiểm định Benchmark (chess.dat, mushroom.dat...)
 │   └── toy/                    # File dữ liệu nhỏ giả lập thuật toán cơ bản
 ├── docs/                       # Thư mục chứa tài liệu báo cáo kỹ thuật
-│   └── Report_Template.md      # Template / Nội dung báo cáo 
+│   └── Report.pdf              # Nội dung báo cáo 
 └── notebooks/
     └── demo.ipynb              # File Demo bằng Jupyter notebook trình diễn trực quan
 ```
+
+---
+
+## 6. Kết quả Kiểm thử (Unit Tests)
+
+Dự án có đi kèm bộ phận test tự động 100% tuân chuẩn thiết kế packages của ngôn ngữ Julia.
+Để chạy kiểm thử toàb bộ thuật toán cốt lõi, chạy lệnh sau:
+```powershell
+julia --project test/runtests.jl
+```
+
+**Output mẫu từ phiên chạy cuối cùng:**
+```text
+┌ Warning: Dataset T1014D100K.dat không tồn tại, bạn cần tải về thư mục data/benchmark
+└ @ Main.TestBenchmark D:\HuynhHan\Data_mining\lab2-data-mining\test\test_benchmark.jl:40
+
+Test Summary: | Pass  Broken  Total  Time
+All Tests     |   13       1     14  7.7s
+```
+*(Ghi chú: Lỗi Broken 1 là do cố ý bỏ qua (skip test) bộ dataset 100 Ngàn giao dịch `T1014D100K` để tránh việc tải file nặng lên Github, các thuật toán lõi trên dataset mẫu vẫn đạt Pass tuyệt đối).*
