@@ -19,3 +19,7 @@ data/subsets/
 *_MFI_output.txt
 *out*.txt
 .ipynb_checkpoints/
+
+# Archives and build artifacts
+*.zip
+*.rar
