@@ -1,8 +1,9 @@
 name = "Lab2DataMining"
-authors = ["GenMax"]
 version = "0.1.0"
+authors = ["GenMax"]
 
 [deps]
+Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
 IJulia = "7073ff75-c697-5162-941a-fcdaad2a7d2a"
 
 [compat]

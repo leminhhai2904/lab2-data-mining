@@ -108,10 +108,6 @@ julia --project test/runtests.jl
 
 **Output mẫu từ phiên chạy cuối cùng:**
 ```text
-┌ Warning: Dataset T1014D100K.dat không tồn tại, bạn cần tải về thư mục data/benchmark
-└ @ Main.TestBenchmark D:\HuynhHan\Data_mining\lab2-data-mining\test\test_benchmark.jl:40
-
-Test Summary: | Pass  Broken  Total  Time
-All Tests     |   13       1     14  7.7s
+Test Summary: | Pass  Total  Time
+All Tests     |   15     15  7.5s
 ```
-*(Ghi chú: Lỗi Broken 1 là do cố ý bỏ qua (skip test) bộ dataset 100 Ngàn giao dịch `T1014D100K` để tránh việc tải file nặng lên Github, các thuật toán lõi trên dataset mẫu vẫn đạt Pass tuyệt đối).*
