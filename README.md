@@ -72,9 +72,6 @@ Hệ thống sẽ dựa vào tập Maximal Frequent Itemsets tìm được, sinh
 Group_ID/
 ├── README.md                   # File hướng dẫn tổng quan dự án
 ├── Project.toml                # Cấu hình dependency môi trường (chuẩn Julia)
-├── Manifest.toml               # File khóa phiên bản chính xác của các thư viện (đảm bảo tính tái lập)
-├── setup_julia.ps1             # Script tự động tải lõi ngôn ngữ Portable và kích hoạt Package
-├── Lab_information             # File mô tả yêu cầu đồ án
 ├── src/                        # Mã nguồn chính thức cốt lõi (100% Julia)
 │   ├── main.jl                 # Entry point chính cho luồng chạy Terminal
 │   ├── market_basket.jl        # Script trình diễn Ứng dụng Market Basket Analysis
